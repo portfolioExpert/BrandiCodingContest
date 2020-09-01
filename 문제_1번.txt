@@ -1,0 +1,32 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+//1번
+int output[6];
+int main() {
+    int input;
+    int num;
+    cin >> input;
+    while(cin >> num){
+        int under = 220 - input;
+        float val = (float)(num * 100 / under);
+        if(val < 60){
+            output[5]++;
+        }
+        else if(val >= 60 && val < 68)
+            output[4]++;
+        else if(val >= 68 && val < 75)
+            output[3]++;
+        else if(val >= 75 && val < 80)
+            output[2]++;
+        else if(val >= 80 && val < 90)
+            output[1]++;
+        else if(val >=90)
+            output[0]++;
+    }
+    for(int i = 0;i<6;i++){
+        cout << output[i] << " ";
+    }
+    return 0;
+}
