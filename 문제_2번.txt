@@ -1,0 +1,96 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+//2번
+#include <cstring>
+#include <queue>
+queue<pair<int,int>> sol;
+int map[51][51];
+int hvisit[51][51];
+int wvisit[51][51];
+int dx[4] = {1, -1 ,0 ,0};
+int dy[4] = {0 ,0 ,1, -1};
+int n, result;
+void wbfs(int x, int y);
+void hbfs(int x, int y);
+void bfs(int x, int y);
+void solve();
+int main() {
+    cin >> n;
+    for(int i = 1;i<=n;i++){
+        for(int j = 1;j<=n;j++){
+            cin >> map[i][j];
+            if(map[i][j] == 1){
+                wvisit[i][j] = 1;
+                hvisit[i][j] = 1;
+            }
+        }
+    }
+    wbfs(1, 1);
+    hbfs(n, n);
+    for(int i = 1;i<=n;i++){
+        for(int j = 1;j<=n;j++){
+            if(hvisit[i][j] < wvisit[i][j]){
+                sol.push({i, j});
+            }
+        }
+    }
+    solve();
+    cout << result;
+}
+void wbfs(int x, int y){
+    queue<pair<int,int>>q;
+    q.push({x, y});
+    wvisit[x][y] = 1;
+    while(!q.empty()){
+        int gox = q.front().first;
+        int goy = q.front().second;
+        q.pop();
+        for(int i = 0;i<4;i++){
+            int gx = gox + dx[i];
+            int gy = goy + dy[i];
+            if(gx >= 1 && gx <= n && gy >= 1 && gy <= n && map[gx][gy] == 0 && wvisit[gx][gy] == 0){
+                wvisit[gx][gy] = wvisit[gox][goy] + 1;
+                q.push({gx, gy});
+            }
+        }
+    }
+}
+void hbfs(int x, int y){
+    queue<pair<int,int>>q;
+    q.push({x, y});
+    hvisit[x][y] = 1;
+    while(!q.empty()){
+        int gox = q.front().first;
+        int goy = q.front().second;
+        q.pop();
+        for(int i = 0;i<4;i++){
+            int gx = gox + dx[i];
+            int gy = goy + dy[i];
+            if(gx >= 1 && gx <= n && gy >= 1 && gy <= n && map[gx][gy] == 0 && hvisit[gx][gy] == 0){
+                hvisit[gx][gy] = hvisit[gox][goy] + 1;
+                q.push({gx, gy});
+            }
+        }
+    }
+}
+void solve(){
+    while(!sol.empty()){
+        int cnt = 0;
+        int bx = sol.front().first;
+        int by = sol.front().second;
+        sol.pop();
+        map[bx][by] = 1;
+        memset(wvisit, 0, sizeof(wvisit));
+        wbfs(1, 1);
+        for(int i = 1;i<=n;i++){
+            for(int j =1;j<=n;j++){
+                if(map[i][j] == 0 && wvisit[i][j] == 0)
+                    cnt++;
+            }
+        }
+        map[bx][by] = 0;
+        result = max(result, cnt);
+    }
+}
