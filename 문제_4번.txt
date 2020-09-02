@@ -1,0 +1,51 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+//4번
+#include <cstring>
+#include <queue>
+queue<pair<int, int>>q;
+int dx[4] = {1 ,-1 ,0 ,0};
+int dy[8] = {0, 0, 1, -1};
+int map[101][101];
+int visit[101][101];
+int n, result, d;
+int bfs(int x, int y);
+int main() {
+    cin >> n >> d;
+    for(int i = 0;i<n;i++){
+        for(int j = 0;j<n;j++){
+            cin >> map[i][j];
+        }
+    }
+    for(int i = 0;i<n;i++){
+        for(int j = 0;j<n;j++){
+            if(map[i][j] == 0){
+                memset(visit, 0, sizeof(visit));
+                result = max(result, bfs(i,j));
+            }
+        }
+    }
+    cout << result;
+}
+int bfs(int x, int y){
+    q.push({x, y});
+    visit[x][y] = 1;
+    int cnt = 1;
+    while(!q.empty()){
+        int gox = q.front().first;
+        int goy = q.front().second;
+        q.pop();
+        for(int i = 0;i<4;i++){
+            int gx = gox + dx[i];
+            int gy = goy + dy[i];
+            if(gx >= 0 && gx < n && gy >= 0 && gy < n && visit[gox][goy] <= d && visit[gx][gy] == 0 && map[gx][gy] == 0){
+                visit[gx][gy] = visit[gox][goy] + 1;
+                q.push({gx, gy});
+                cnt++;
+            }
+        }
+    }
+    return cnt;
+}
